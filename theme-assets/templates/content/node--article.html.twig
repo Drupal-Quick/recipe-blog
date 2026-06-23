@@ -1,0 +1,64 @@
+{#
+/**
+ * @file
+ * Blog recipe — Article node template.
+ *
+ * Two complementary layers of structured markup, both produced without any
+ * SEO/metatag module:
+ *
+ *  1. Semantic HTML5 — <article>, <header>, <time datetime>, <address> with
+ *     rel="author", and a keyword list — readable by humans, search crawlers
+ *     and AI agents alike.
+ *  2. Schema.org BlogPosting JSON-LD ({{ structured_data }}), built from the
+ *     node's fields in blog.theme.inc and emitted only on the full page view.
+ *
+ * Expects `keywords` and `structured_data`, both populated by blog.theme.inc.
+ *
+ * @see blog.theme.inc
+ * @ingroup themeable
+ */
+#}
+<article{{ attributes }}>
+
+  <header>
+    {{ title_prefix }}
+    {% if not page %}
+      <h2{{ title_attributes }}>
+        <a href="{{ url }}" rel="bookmark">{{ label }}</a>
+      </h2>
+    {% endif %}
+    {{ title_suffix }}
+
+    {% if display_submitted %}
+      <p class="node__meta">
+        {{ author_picture }}
+        <address class="node__author">
+          {% trans %}
+            By <a rel="author" href="{{ author_url }}">{{ author_name }}</a>
+          {% endtrans %}
+        </address>
+        <time datetime="{{ date.attributes.datetime }}">{{ date }}</time>
+      </p>
+    {% endif %}
+  </header>
+
+  <div{{ content_attributes }}>
+    {{ content|without('field_tags', 'field_keywords') }}
+  </div>
+
+  {% if keywords %}
+    <footer class="node__keywords">
+      <nav aria-label="{{ 'Keywords'|t }}">
+        <ul>
+          {% for keyword in keywords %}
+            <li>{{ keyword }}</li>
+          {% endfor %}
+        </ul>
+      </nav>
+    </footer>
+  {% endif %}
+
+  {# Schema.org BlogPosting JSON-LD — rendered on full page views only. #}
+  {{ structured_data }}
+
+</article>

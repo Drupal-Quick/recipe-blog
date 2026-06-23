@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {}
+name: Keywords
+vid: keywords
+description: 'Site-wide keyword tags for categorizing content.'
+hierarchy: 0
+weight: 0

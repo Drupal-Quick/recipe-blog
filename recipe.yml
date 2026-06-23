@@ -1,0 +1,45 @@
+name: 'Blog'
+description: >
+  Adds a Keywords taxonomy vocabulary and entity reference field to the Article
+  content type. Depends on the Article type being present — apply
+  core/recipes/standard first (or another recipe that installs Article).
+type: Content
+
+install:
+  - taxonomy
+
+config:
+  # The Keywords vocabulary and the field_keywords storage/instance config live
+  # in this recipe's config/ directory and are created automatically when the
+  # recipe is applied — they do not belong under config.import (which is for
+  # pulling in config already provided by an installed module or theme).
+  actions:
+    # setComponents is a pluralized config action: each list item is unpacked as
+    # the named arguments of EntityDisplayInterface::setComponent($name, $options).
+    core.entity_form_display.node.article.default:
+      setComponents:
+        -
+          name: field_keywords
+          options:
+            type: entity_reference_autocomplete
+            weight: 15
+            region: content
+            settings:
+              match_operator: CONTAINS
+              match_limit: 10
+              size: 60
+              placeholder: ''
+            third_party_settings: {}
+
+    core.entity_view_display.node.article.default:
+      setComponents:
+        -
+          name: field_keywords
+          options:
+            type: entity_reference_label
+            label: above
+            weight: 15
+            region: content
+            settings:
+              link: true
+            third_party_settings: {}
