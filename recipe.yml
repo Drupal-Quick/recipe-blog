@@ -1,8 +1,10 @@
 name: 'Blog'
 description: >
-  Adds a Keywords taxonomy vocabulary and entity reference field to the Article
-  content type. Depends on the Article type being present — apply
-  core/recipes/standard first (or another recipe that installs Article).
+  Adds Keywords (taxonomy vocabulary + entity reference field) to the Article
+  content type, a "writing" view that lists articles by date (block + page
+  displays at /writing), and points the site front page at it. Depends on the
+  Article type being present — apply core/recipes/standard first (or another
+  recipe that installs Article).
 type: Content
 
 install:
@@ -43,3 +45,10 @@ config:
             settings:
               link: true
             third_party_settings: {}
+
+    # Point the site front page at the writing view's page display (/writing),
+    # making the article index the homepage. set() is dot-aware, so this updates
+    # only page.front and leaves page.403/page.404 intact.
+    system.site:
+      simpleConfigUpdate:
+        page.front: '/writing'
