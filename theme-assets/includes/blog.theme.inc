@@ -153,3 +153,86 @@ function _STARTERKIT_article_jsonld($node, array $keywords): array {
     '#value' => Markup::create($json),
   ];
 }
+
+STARTERKIT_add_preprocessor('views_view', function (array &$variables): void {
+  // Scope to the article-index view; the generic hook_preprocess() fires for
+  // every view under the base hook 'views_view'.
+  $view = $variables['view'];
+  if ($view->id() !== 'writing') {
+    return;
+  }
+
+  // Flatten the result rows to the few values views-view--writing.html.twig
+  // needs, so the template stays clean and platform-agnostic.
+  $dateFormatter = \Drupal::service('date.formatter');
+  $articles = [];
+  foreach ($view->result as $row) {
+    $node = $row->_entity ?? NULL;
+    if (!$node) {
+      continue;
+    }
+    $created = (int) $node->getCreatedTime();
+    $articles[] = [
+      'title' => $node->label(),
+      'url' => $node->toUrl()->toString(),
+      'date_display' => $dateFormatter->format($created, 'custom', 'm-d-Y'),
+      'datetime' => $dateFormatter->format($created, 'custom', 'Y-m-d'),
+    ];
+  }
+  $variables['articles'] = $articles;
+  $variables['structured_data'] = _STARTERKIT_article_list_jsonld($view->result, $dateFormatter);
+});
+
+/**
+ * Builds a Schema.org ItemList JSON-LD element for the article index.
+ *
+ * Each entry is a ListItem whose item is a BlogPosting (headline, absolute URL,
+ * ISO datePublished), mirroring the per-article markup. Hand-built — no module.
+ *
+ * @param \Drupal\views\ResultRow[] $results
+ *   The view's result rows.
+ * @param \Drupal\Core\Datetime\DateFormatterInterface $dateFormatter
+ *   The date formatter service.
+ *
+ * @return array|null
+ *   A renderable html_tag element, or NULL when there are no rows.
+ */
+function _STARTERKIT_article_list_jsonld(array $results, $dateFormatter): ?array {
+  $items = [];
+  $position = 1;
+  foreach ($results as $row) {
+    $node = $row->_entity ?? NULL;
+    if (!$node) {
+      continue;
+    }
+    $items[] = [
+      '@type' => 'ListItem',
+      'position' => $position++,
+      'item' => [
+        '@type' => 'BlogPosting',
+        'headline' => $node->label(),
+        'url' => $node->toUrl('canonical', ['absolute' => TRUE])->toString(),
+        'datePublished' => $dateFormatter->format($node->getCreatedTime(), 'custom', 'c'),
+      ],
+    ];
+  }
+  if (!$items) {
+    return NULL;
+  }
+
+  $data = [
+    '@context' => 'https://schema.org',
+    '@type' => 'ItemList',
+    'itemListOrder' => 'https://schema.org/ItemListOrderDescending',
+    'numberOfItems' => count($items),
+    'itemListElement' => $items,
+  ];
+  $json = json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG);
+
+  return [
+    '#type' => 'html_tag',
+    '#tag' => 'script',
+    '#attributes' => ['type' => 'application/ld+json'],
+    '#value' => Markup::create($json),
+  ];
+}

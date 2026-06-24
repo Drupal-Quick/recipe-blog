@@ -1,0 +1,31 @@
+{#
+/**
+ * @file
+ * "Writing" view — article index. Deliberately minimal, platform-agnostic
+ * markup: an ordered list of <article> rows (title + date), no Views chrome.
+ *
+ * `articles` (title/url/date_display/datetime) and `structured_data` (an
+ * ItemList → Article JSON-LD block) are built in blog.theme.inc.
+ *
+ * @ingroup themeable
+ */
+#}
+<h1 class="sr-only">{{ title|default('Writing'|t) }}</h1>
+
+{% if articles %}
+  <ol class="flex flex-col">
+    {% for a in articles %}
+      <li>
+        <article class="flex items-baseline justify-between gap-6 py-row">
+          <h2 class="min-w-0 truncate text-base font-normal">
+            <a href="{{ a.url }}" class="transition-colors hover:text-muted">{{ a.title }}</a>
+          </h2>
+          <time datetime="{{ a.datetime }}" class="shrink-0 tabular-nums text-muted">{{ a.date_display }}</time>
+        </article>
+      </li>
+    {% endfor %}
+  </ol>
+{% endif %}
+
+{{ pager }}
+{{ structured_data }}
