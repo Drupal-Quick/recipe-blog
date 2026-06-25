@@ -9,6 +9,10 @@ type: Content
 
 install:
   - taxonomy
+  # dq_blog ships in this recipe's module/ directory; dq:scaffold assembles it
+  # under the umbrella module before the recipe is applied. It carries the
+  # Article preprocess + Schema.org JSON-LD as native OOP #[Hook] methods.
+  - dq_blog
 
 config:
   # The Keywords vocabulary and the field_keywords storage/instance config live
