@@ -1,0 +1,8 @@
+name: 'DQ Blog'
+type: module
+description: 'Blog recipe behaviour: Article preprocess and module-free Schema.org BlogPosting/ItemList JSON-LD.'
+core_version_requirement: ^11.3
+package: 'DQ'
+dependencies:
+  - drupal:node
+  - drupal:views
