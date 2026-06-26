@@ -2,5 +2,13 @@
     "name": "drupal-quick/recipe-blog",
     "description": "drupal-quick blog recipe — adds a Keywords vocabulary and field to Article, with theme assets and module-free Schema.org markup.",
     "type": "drupal-recipe",
-    "license": "GPL-2.0-or-later"
+    "license": "GPL-2.0-or-later",
+    "extra": {
+        "dq": {
+            "recipe": {
+                "key": "blog",
+                "label": "Blog — Keywords taxonomy + entity reference field on Article"
+            }
+        }
+    }
 }
