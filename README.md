@@ -1,6 +1,6 @@
 # recipe-blog
 
-> **Work in progress** — this is a proof-of-concept recipe used to develop and test the [drupal-quick](https://github.com/Drupal-Quick/drupal-quick) scaffolding workflow. The API and config are not yet stable.
+> **Work in progress** — this is a proof-of-concept recipe used to develop and test the [Quick](https://github.com/Drupal-Quick/drupal-quick) scaffolding workflow. The API and config are not yet stable.
 
 A `drupal-recipe` package that adds a minimal blog layer to a standard Drupal install.
 
@@ -20,7 +20,7 @@ Depends on the Article content type being present. Apply `core/recipes/standard`
 
 ## Usage
 
-This recipe is consumed automatically by [drupal-quick](https://github.com/Drupal-Quick/drupal-quick). Add `"blog"` to the `recipes:` list in `config.dq.yml` and run `composer exec dq-install` followed by `drush dq:scaffold`. See the [drupal-quick workflow](https://github.com/Drupal-Quick/drupal-quick/blob/main/docs/workflow.md) for the full steps.
+This recipe is consumed automatically by [Quick](https://github.com/Drupal-Quick/drupal-quick). Add `"blog"` to the `recipes:` list in `config.dq.yml` and run `composer exec dq-install` followed by `drush dq:scaffold`. See the [Quick workflow](https://github.com/Drupal-Quick/drupal-quick/blob/main/docs/workflow.md) for the full steps.
 
 To apply it manually:
 
